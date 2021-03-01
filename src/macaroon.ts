@@ -698,7 +698,7 @@ class Macaroon {
   */
   verify(rootKeyBytes: Uint8Array, check: (cond: string) => any, discharges: Macaroon[] = []) {
     const rootKeyBits = makeKey(bytesToBits(requireBytes(rootKeyBytes, 'Root key')));
-    const used = discharges.map(d => 0);
+    const used = discharges.map(d => d - d);
 
     this._verify(this._signatureBits, rootKeyBits, check, discharges, used);
 
