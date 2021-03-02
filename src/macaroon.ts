@@ -698,16 +698,16 @@ class Macaroon {
   */
   verify(rootKeyBytes: Uint8Array, check: (cond: string) => any, discharges: Macaroon[] = []) {
     const rootKeyBits = makeKey(bytesToBits(requireBytes(rootKeyBytes, 'Root key')));
-    const used = discharges.map(d => d - d);
+    const _used = discharges.map(d => 0);
 
-    this._verify(this._signatureBits, rootKeyBits, check, discharges, used);
+    this._verify(this._signatureBits, rootKeyBits, check, discharges, _used);
 
     discharges.forEach((dm, i) => {
-      if (used[i] === 0) {
+      if (_used[i] === 0) {
         throw new Error(
           `discharge macaroon ${toString(dm.identifier)} was not used`);
       }
-      if (used[i] !== 1) {
+      if (_used[i] !== 1) {
         // Should be impossible because of check in verify, but be defensive.
         throw new Error(
           `discharge macaroon ${toString(dm.identifier)} was used more than once`);
